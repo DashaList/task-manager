@@ -5,6 +5,13 @@
     "module": "ESNext",
     "target": "ES2022",
     "skipLibCheck": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"],
+      "@/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@ui": ["components/ui/index.ts"],
+    }
   }
 }

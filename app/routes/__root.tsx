@@ -5,6 +5,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import globalscss from "~/styles/globals.css?url";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createRootRoute({
         title: "Task Manager",
       },
     ],
+    links: [{ rel: "stylesheet", href: globalscss }],
   }),
   component: RootComponent,
 });

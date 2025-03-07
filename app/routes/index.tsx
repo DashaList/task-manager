@@ -1,9 +1,6 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { TodoListPage } from "@/pages/TodoListPage";
+import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: Home,
+  component: TodoListPage,
 });
-
-function Home() {
-  return <div>Hi</div>;
-}
