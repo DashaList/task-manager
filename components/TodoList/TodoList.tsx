@@ -1,6 +1,6 @@
-import { Todo } from "@/utils/types";
-import { TodoItem } from "../TodoItem";
-import { FC } from "react";
+import { FC } from 'react';
+import { Todo } from '@/utils/types';
+import { TodoItem } from '../TodoItem';
 
 interface TodoListProps {
   todos: Todo[];
@@ -8,11 +8,7 @@ interface TodoListProps {
   onDeleteItem: (id: string) => void;
 }
 
-export const TodoList: FC<TodoListProps> = ({
-  todos,
-  onToggleItem,
-  onDeleteItem,
-}) => {
+export const TodoList: FC<TodoListProps> = ({ todos, onToggleItem, onDeleteItem }) => {
   if (todos.length === 0) return null;
 
   return (

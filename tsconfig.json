@@ -11,7 +11,7 @@
       "~/*": ["./app/*"],
       "@/*": ["./*"],
       "@components/*": ["components/*"],
-      "@ui": ["components/ui/index.ts"],
+      "@ui": ["components/ui/index.ts"]
     }
   }
 }

@@ -1,6 +1,6 @@
-import { TodoListPage } from "@/pages/TodoListPage";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router';
+import { TodoListPage } from '@/pages/TodoListPage';
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute('/')({
   component: TodoListPage,
 });

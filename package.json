@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "lint": "eslint"
   },
   "keywords": [],
   "author": "",
@@ -29,10 +30,18 @@
     "vinxi": "^0.5.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^16.0.0",
+    "prettier": "3.5.3",
     "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

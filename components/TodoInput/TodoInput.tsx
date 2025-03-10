@@ -1,19 +1,19 @@
-import { FC, FormEvent, useState } from "react";
-import { Plus } from "lucide-react";
+import { FC, FormEvent, useState } from 'react';
+import { Plus } from 'lucide-react';
 
 interface TodoInputProps {
   onAddTodo: (text: string) => void;
 }
 
 export const TodoInput: FC<TodoInputProps> = ({ onAddTodo }) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
       onAddTodo(text.trim());
-      setText("");
+      setText('');
       setIsEditing(false);
     }
   };
