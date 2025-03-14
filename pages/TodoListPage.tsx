@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Header } from '@/components/Header';
 import { TodoInput } from '@/components/TodoInput';
 import { TodoList } from '@/components/TodoList';
 import { Todo } from '@/utils/types';
@@ -31,6 +32,7 @@ export const TodoListPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-8 pt-16">
+      <Header />
       <h1 className="text-[32px] font-bold text-gray-900 mb-8">Frog Task Manager</h1>
       <TodoList
         todos={todos.filter((todo) => !todo.completed)}

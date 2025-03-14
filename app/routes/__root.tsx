@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import globalscss from '~/styles/globals.css?url';
 import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import { getUser } from '@/utils/api/auth';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -18,6 +19,11 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: 'stylesheet', href: globalscss }],
   }),
+  beforeLoad: async () => {
+    const authState = await getUser();
+
+    return { authState };
+  },
   component: RootComponent,
 });
 

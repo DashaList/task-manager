@@ -40,6 +40,7 @@ export default [
         { argsIgnorePattern: '^_', ignoreRestSiblings: true },
       ],
       'arrow-body-style': ['error', 'as-needed'],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
 ];
