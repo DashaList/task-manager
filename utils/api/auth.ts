@@ -10,7 +10,7 @@ export const signIn = createServerFn().handler(async () => {
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `http://${host}/auth/callback`,
+      redirectTo: `https://${host}/auth/callback`,
     },
   });
 
