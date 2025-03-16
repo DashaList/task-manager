@@ -40,3 +40,18 @@ export const logOut = createServerFn().handler(async () => {
 
   await supabase.auth.signOut();
 });
+
+export const exchangeAuthCode = createServerFn()
+  .validator((data: string) => data)
+  .handler(async (ctx) => {
+    const code = ctx.data;
+
+    if (code) {
+      const supabase = getSupabaseServerClient();
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+      if (!error) {
+        throw redirect({ to: `/` });
+      }
+    }
+  });

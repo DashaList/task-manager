@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { getSupabaseServerClient } from '@/server/supabase';
+import { createFileRoute } from '@tanstack/react-router';
+import { exchangeAuthCode } from '@/utils/api/auth';
 
 // TODO: add redirect to route in next search param, remove errorComponent
 
@@ -8,16 +8,7 @@ export const Route = createFileRoute('/auth/callback')({
     code: (search.code as string) || '',
   }),
   beforeLoad: async ({ search }) => {
-    const code = search.code;
-
-    if (code) {
-      const supabase = getSupabaseServerClient();
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (!error) {
-        throw redirect({ to: `/` });
-      }
-    }
+    await exchangeAuthCode({ data: search.code });
   },
   component: () => <div>This is auth/callback component</div>,
   errorComponent: () => <div>This is auth/callback ERROR component</div>,
