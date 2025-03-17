@@ -1,16 +1,17 @@
 import { redirect } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
-import { getRequestHost } from '@tanstack/react-start/server';
+import { getRequestHost, getRequestProtocol } from '@tanstack/react-start/server';
 import { getSupabaseServerClient } from '@/server/supabase';
 
 export const signIn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
+  const protocol = getRequestProtocol();
   const host = getRequestHost();
 
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `https://${host}/auth/callback`,
+      redirectTo: `${protocol}://${host}/auth/callback`,
     },
   });
 
@@ -51,7 +52,7 @@ export const exchangeAuthCode = createServerFn()
       const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (!error) {
-        throw redirect({ to: `/` });
+        throw redirect({ to: `/`, params: {}, search: {} });
       }
     }
   });
