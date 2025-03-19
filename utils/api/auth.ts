@@ -31,6 +31,7 @@ export const getUser = createServerFn().handler(async () => {
   return {
     isAuthenticated: true,
     user: {
+      id: data.user.id,
       email: data.user.email,
     },
   };
@@ -52,7 +53,7 @@ export const exchangeAuthCode = createServerFn()
       const { error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (!error) {
-        throw redirect({ to: `/`, params: {}, search: {} });
+        throw redirect({ to: `/` });
       }
     }
   });
