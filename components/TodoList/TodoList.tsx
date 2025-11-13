@@ -4,11 +4,11 @@ import { TodoItem } from '../TodoItem';
 
 interface TodoListProps {
   todos: Todo[];
-  onToggleItem: (id: string) => void;
+  onEditItem: (id: string) => (newTask: Partial<Todo>) => void;
   onDeleteItem: (id: string) => void;
 }
 
-export const TodoList: FC<TodoListProps> = ({ todos, onToggleItem, onDeleteItem }) => {
+export const TodoList: FC<TodoListProps> = ({ todos, onEditItem, onDeleteItem }) => {
   if (todos.length === 0) return null;
 
   return (
@@ -17,7 +17,7 @@ export const TodoList: FC<TodoListProps> = ({ todos, onToggleItem, onDeleteItem 
         <TodoItem
           key={todo.id}
           todo={todo}
-          onToggle={() => onToggleItem(todo.id)}
+          onEdit={onEditItem(todo.id)}
           onDelete={() => onDeleteItem(todo.id)}
         />
       ))}

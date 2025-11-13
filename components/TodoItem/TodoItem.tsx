@@ -5,13 +5,17 @@ import { Button, Checkbox } from '@ui';
 
 interface TodoItemProps {
   todo: Todo;
-  onToggle: () => void;
+  onEdit: (newTask: Partial<Todo>) => void;
   onDelete: () => void;
 }
 
-export const TodoItem: FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => (
+export const TodoItem: FC<TodoItemProps> = ({ todo, onEdit, onDelete }) => (
   <li className="flex items-center gap-2 p-2 rounded hover:bg-muted/50 group">
-    <Checkbox checked={todo.completed} onCheckedChange={onToggle} id={`todo-${todo.id}`} />
+    <Checkbox
+      checked={todo.completed}
+      onCheckedChange={() => onEdit({ completed: !todo.completed })}
+      id={`todo-${todo.id}`}
+    />
     <label
       htmlFor={`todo-${todo.id}`}
       className={`flex-1 cursor-pointer ${
