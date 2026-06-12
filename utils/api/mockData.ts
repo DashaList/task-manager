@@ -22,6 +22,12 @@ export const mockProjects = [
     name: 'Inbox',
     ownerId: mockUser.id,
   },
+  {
+    id: '00000000-0000-4000-8000-000000000003',
+    createdAt: '2026-08-05T00:00:00.000Z',
+    name: 'My cool project',
+    ownerId: mockUser.id,
+  },
 ];
 
 let mockTasks: Todo[] = [

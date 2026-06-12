@@ -1,6 +1,8 @@
 import { FC, FormEvent, useState } from 'react';
-import { Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui';
-import { Bell, Calendar, Flag, MoreHorizontal, Plus } from 'lucide-react';
+import { ProjectSelect } from '../ProjectSelect';
+import { Button } from '../ui';
+import { TodoInputControls } from './TodoInputControls';
+import { Plus } from 'lucide-react';
 import { getRouteApi } from '@tanstack/react-router';
 
 interface TodoInputProps {
@@ -10,7 +12,6 @@ interface TodoInputProps {
 export const TodoInput: FC<TodoInputProps> = ({ onAddTodo }) => {
   const routeApi = getRouteApi('/');
   const { defaultProjectId } = routeApi.useLoaderData().profile;
-  const projects = routeApi.useLoaderData().projects;
 
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState('');
@@ -56,60 +57,19 @@ export const TodoInput: FC<TodoInputProps> = ({ onAddTodo }) => {
           />
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-7 gap-1 rounded-md text-gray-500 hover:text-gray-900"
-          >
-            <Calendar className="h-4 w-4" />
-            <span className="text-sm">Date</span>
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-7 gap-1 rounded-md text-gray-500 hover:text-gray-900"
-          >
-            <Flag className="h-4 w-4" />
-            <span className="text-sm">Priority</span>
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-7 gap-1 rounded-md text-gray-500 hover:text-gray-900"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="text-sm">Reminders</span>
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-7 px-2 text-gray-500 hover:text-gray-900"
-          >
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </div>
+        <TodoInputControls />
 
         <div className="mt-4 flex items-center justify-between border-t pt-3">
-          <Select value={projectId} onValueChange={(value) => setProjectId(value)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {projects.map(({ id, name }) => (
-                <SelectItem key={id} value={id}>
-                  {name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <ProjectSelect projectId={projectId} onChange={setProjectId} />
 
           <div className="flex items-center gap-2">
-            <Button type="button" variant="ghost" size="sm" className="h-7 text-sm font-normal">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 text-sm font-normal"
+              onClick={() => setIsEditing(false)}
+            >
               Cancel
             </Button>
             <Button
