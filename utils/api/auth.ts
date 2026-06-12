@@ -2,6 +2,7 @@ import { redirect } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { getRequestHost, getRequestProtocol } from '@tanstack/react-start/server';
 import { getSupabaseServerClient } from '@/server/supabase';
+import { mockUser, useMocks } from './mockData';
 
 export const signIn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
@@ -21,6 +22,13 @@ export const signIn = createServerFn().handler(async () => {
 });
 
 export const getUser = createServerFn().handler(async () => {
+  if (useMocks()) {
+    return {
+      isAuthenticated: true,
+      user: mockUser,
+    };
+  }
+
   const supabase = getSupabaseServerClient();
   const { data } = await supabase.auth.getUser();
 
@@ -38,6 +46,10 @@ export const getUser = createServerFn().handler(async () => {
 });
 
 export const logOut = createServerFn().handler(async () => {
+  if (useMocks()) {
+    return;
+  }
+
   const supabase = getSupabaseServerClient();
 
   await supabase.auth.signOut();
