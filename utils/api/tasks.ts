@@ -1,10 +1,10 @@
 import { Todo } from '../types';
 import { getUser } from './auth';
+import { addMockTask, deleteMockTask, editMockTask, getMockTasks, useMocks } from './mockData';
 import { eq } from 'drizzle-orm';
 import { createServerFn } from '@tanstack/react-start';
 import { db } from '@/server/drizzle';
 import { tasksTable } from '@/server/drizzle/schema';
-import { addMockTask, deleteMockTask, editMockTask, getMockTasks, useMocks } from './mockData';
 
 export const fetchTasks = createServerFn().handler(async () => {
   if (useMocks()) {
@@ -16,19 +16,23 @@ export const fetchTasks = createServerFn().handler(async () => {
     .select()
     .from(tasksTable)
     .where(eq(tasksTable.ownerId, user?.id ?? ''));
-  return tasks;
+
+  return tasks.map(({ description, ...task }) => ({
+    ...task,
+    description: description ?? undefined,
+  }));
 });
 
 export const addTask = createServerFn({ method: 'POST' })
-  .validator((data: string) => data)
-  .handler(async ({ data: text }) => {
+  .validator((data: Pick<Todo, 'text' | 'description' | 'projectId'>) => data)
+  .handler(async ({ data: { text, projectId, description } }) => {
     if (useMocks()) {
-      addMockTask(text);
+      addMockTask(text, projectId, description);
       return;
     }
 
     const { user } = await getUser();
-    await db.insert(tasksTable).values({ text, ownerId: user?.id });
+    await db.insert(tasksTable).values({ text, description, projectId, ownerId: user?.id });
   });
 
 export const deleteTask = createServerFn({ method: 'POST' })

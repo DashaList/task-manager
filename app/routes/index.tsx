@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
+import { AddTodoControl } from '@/components/AddTodoControl';
 import { Header } from '@/components/Header';
-import { TodoInput } from '@/components/TodoInput';
 import { TodoList } from '@/components/TodoList';
 import { getProfile } from '@/utils/api/profile';
 import { getUserProjects } from '@/utils/api/projects';
@@ -37,8 +37,8 @@ function TodoListPage() {
   const deleteTask = useServerFn(deleteTaskServerfn);
   const editTask = useServerFn(editTaskServerFn);
 
-  const handleAddTask = async (text: string) => {
-    await addTask({ data: text });
+  const handleAddTask = async (text: string, projectId: string, description?: string) => {
+    await addTask({ data: { text, projectId, description } });
     router.invalidate();
   };
 
@@ -48,12 +48,9 @@ function TodoListPage() {
   };
 
   const handleEditTask = (id: string) => async (newTask: Partial<Todo>) => {
-    console.log('handleEdit', newTask);
     await editTask({ data: { id, ...newTask } });
     router.invalidate();
   };
-
-  const toggleTodo = (_: string) => {};
 
   // TODO: make layout with header
 
@@ -66,7 +63,7 @@ function TodoListPage() {
         onEditItem={handleEditTask}
         onDeleteItem={handleDeleteTask}
       />
-      <TodoInput onAddTodo={handleAddTask} />
+      <AddTodoControl onAddTodo={handleAddTask} />
       <TodoList
         todos={tasks.filter((todo) => todo.completed)}
         onEditItem={handleEditTask}

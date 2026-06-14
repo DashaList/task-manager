@@ -25,7 +25,13 @@ export const mockProjects = [
   {
     id: '00000000-0000-4000-8000-000000000003',
     createdAt: '2026-08-05T00:00:00.000Z',
-    name: 'My cool project',
+    name: 'Frog Task Manager',
+    ownerId: mockUser.id,
+  },
+  {
+    id: '00000000-0000-4000-8000-000000000004',
+    createdAt: '2026-08-06T00:00:00.000Z',
+    name: 'Frogramming',
     ownerId: mockUser.id,
   },
 ];
@@ -34,24 +40,29 @@ let mockTasks: Todo[] = [
   {
     id: 'mock-task-1',
     text: 'Try the mocked task manager',
+    description: 'Add optional details that sit below the task name.',
     completed: false,
+    projectId: mockProjectId,
   },
   {
     id: 'mock-task-2',
     text: 'Toggle this task without touching the database',
     completed: true,
+    projectId: '00000000-0000-4000-8000-000000000004',
   },
 ];
 
 export const getMockTasks = () => mockTasks;
 
-export const addMockTask = (text: string) => {
+export const addMockTask = (text: string, projectId: string, description?: string) => {
   mockTasks = [
     ...mockTasks,
     {
       id: `mock-task-${Date.now()}`,
       text,
+      description,
       completed: false,
+      projectId,
     },
   ];
 };

@@ -26,7 +26,9 @@ export const tasksTable = pgTable(
     ownerId: uuid('owner_id')
       .default(sql`auth.uid()`)
       .notNull(),
+    projectId: uuid('project_id').notNull(),
     text: text().default('').notNull(),
+    description: text(),
     completed: boolean().default(false).notNull(),
   },
   (table) => [
@@ -34,6 +36,13 @@ export const tasksTable = pgTable(
       columns: [table.ownerId],
       foreignColumns: [usersTable.id],
       name: 'tasks_owner_id_fkey',
+    })
+      .onUpdate('cascade')
+      .onDelete('cascade'),
+    foreignKey({
+      columns: [table.projectId],
+      foreignColumns: [projectsTable.id],
+      name: 'tasks_project_id_fkey',
     })
       .onUpdate('cascade')
       .onDelete('cascade'),
