@@ -1,8 +1,22 @@
+import { mockUser, useMocks } from './mockData';
 import { redirect } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { getRequestHost, getRequestProtocol } from '@tanstack/react-start/server';
 import { getSupabaseServerClient } from '@/server/supabase';
-import { mockUser, useMocks } from './mockData';
+
+export interface AuthUser {
+  id: string;
+  email?: string;
+}
+
+export type AuthState =
+  | {
+      isAuthenticated: true;
+      user: AuthUser;
+    }
+  | {
+      isAuthenticated: false;
+    };
 
 export const signIn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
@@ -21,7 +35,7 @@ export const signIn = createServerFn().handler(async () => {
   }
 });
 
-export const getUser = createServerFn().handler(async () => {
+export const getUser = createServerFn().handler(async (): Promise<AuthState> => {
   if (useMocks()) {
     return {
       isAuthenticated: true,
@@ -44,6 +58,16 @@ export const getUser = createServerFn().handler(async () => {
     },
   };
 });
+
+export const getAuthenticatedUser = async () => {
+  const authState = await getUser();
+
+  if (!authState.isAuthenticated) {
+    throw redirect({ to: '/signin' });
+  }
+
+  return authState.user;
+};
 
 export const logOut = createServerFn().handler(async () => {
   if (useMocks()) {

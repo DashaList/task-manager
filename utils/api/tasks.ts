@@ -1,5 +1,5 @@
 import { Todo } from '../types';
-import { getUser } from './auth';
+import { getAuthenticatedUser } from './auth';
 import { addMockTask, deleteMockTask, editMockTask, getMockTasks, useMocks } from './mockData';
 import { eq } from 'drizzle-orm';
 import { createServerFn } from '@tanstack/react-start';
@@ -11,11 +11,11 @@ export const fetchTasks = createServerFn().handler(async () => {
     return getMockTasks();
   }
 
-  const { user } = await getUser();
+  const user = await getAuthenticatedUser();
   const tasks = await db
     .select()
     .from(tasksTable)
-    .where(eq(tasksTable.ownerId, user?.id ?? ''));
+    .where(eq(tasksTable.ownerId, user.id));
 
   return tasks.map(({ description, ...task }) => ({
     ...task,
@@ -31,8 +31,8 @@ export const addTask = createServerFn({ method: 'POST' })
       return;
     }
 
-    const { user } = await getUser();
-    await db.insert(tasksTable).values({ text, description, projectId, ownerId: user?.id });
+    const user = await getAuthenticatedUser();
+    await db.insert(tasksTable).values({ text, description, projectId, ownerId: user.id });
   });
 
 export const deleteTask = createServerFn({ method: 'POST' })
@@ -43,7 +43,7 @@ export const deleteTask = createServerFn({ method: 'POST' })
       return;
     }
 
-    const { user } = await getUser();
+    await getAuthenticatedUser();
     await db.delete(tasksTable).where(eq(tasksTable.id, id));
   });
 
@@ -55,7 +55,7 @@ export const editTask = createServerFn({ method: 'POST' })
       return;
     }
 
-    const { user } = await getUser();
+    await getAuthenticatedUser();
     await db
       .update(tasksTable)
       .set({ ...newTask })

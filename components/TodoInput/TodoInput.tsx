@@ -21,8 +21,6 @@ export const TodoInput: FC<TodoInputProps> = ({ onAddTodo, onClose }) => {
     e.preventDefault();
     if (text.trim()) {
       onAddTodo(text.trim(), projectId, description.trim() || undefined);
-      setText('');
-      setDescription('');
       onClose();
     }
   };

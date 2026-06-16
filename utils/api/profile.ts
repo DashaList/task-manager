@@ -1,4 +1,4 @@
-import { getUser } from './auth';
+import { getAuthenticatedUser } from './auth';
 import { eq } from 'drizzle-orm';
 import { createServerFn } from '@tanstack/react-start';
 import { db } from '@/server/drizzle';
@@ -10,12 +10,12 @@ export const getProfile = createServerFn().handler(async () => {
     return mockProfile;
   }
 
-  const { user } = await getUser();
+  const user = await getAuthenticatedUser();
 
   const [profile] = await db
     .select()
     .from(profilesTable)
-    .where(eq(profilesTable.id, user?.id ?? ''));
+    .where(eq(profilesTable.id, user.id));
 
   return profile;
 });
