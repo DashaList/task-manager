@@ -1,12 +1,12 @@
+import { mockProjects, isMockMode } from './mockData';
 import { getProfile } from './profile';
 import { eq } from 'drizzle-orm';
 import { createServerFn } from '@tanstack/react-start';
 import { db } from '@/server/drizzle';
 import { projectsTable } from '@/server/drizzle/schema';
-import { mockProjects, useMocks } from './mockData';
 
 export const getUserProjects = createServerFn().handler(async () => {
-  if (useMocks()) {
+  if (isMockMode()) {
     return mockProjects;
   }
 

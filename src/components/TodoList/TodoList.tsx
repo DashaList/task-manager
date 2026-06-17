@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Todo } from '@/utils/types';
 import { TodoItem } from '../TodoItem';
+import { Todo } from '@/utils/types';
 
 interface TodoListProps {
   todos: Todo[];

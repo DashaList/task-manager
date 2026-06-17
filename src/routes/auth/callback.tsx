@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
 import { exchangeAuthCode } from '@/utils/api/auth';
+import { createFileRoute } from '@tanstack/react-router';
 
 // TODO: add redirect to route in next search param, remove errorComponent
 

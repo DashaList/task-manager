@@ -1,7 +1,8 @@
+/// <reference types="vite/client" />
 import type { ReactNode } from 'react';
-import globalscss from '~/styles/globals.css?url';
-import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import globalscss from '@/styles/globals.css?url';
 import { getUser } from '@/utils/api/auth';
+import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
 
 export const Route = createRootRoute({
   head: () => ({

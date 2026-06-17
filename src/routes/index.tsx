@@ -1,8 +1,5 @@
 import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
-import { AddTodoControl } from '@/components/AddTodoControl';
-import { Header } from '@/components/Header';
-import { TodoList } from '@/components/TodoList';
 import { getProfile } from '@/utils/api/profile';
 import { getUserProjects } from '@/utils/api/projects';
 import {
@@ -12,6 +9,9 @@ import {
   fetchTasks,
 } from '@/utils/api/tasks';
 import { Todo } from '@/utils/types';
+import { AddTodoControl } from '@components/AddTodoControl';
+import { Header } from '@components/Header';
+import { TodoList } from '@components/TodoList';
 
 export const Route = createFileRoute('/')({
   component: TodoListPage,

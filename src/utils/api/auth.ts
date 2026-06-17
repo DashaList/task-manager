@@ -1,4 +1,4 @@
-import { mockUser, useMocks } from './mockData';
+import { mockUser, isMockMode } from './mockData';
 import { redirect } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { getRequestHost, getRequestProtocol } from '@tanstack/react-start/server';
@@ -36,7 +36,7 @@ export const signIn = createServerFn().handler(async () => {
 });
 
 export const getUser = createServerFn().handler(async (): Promise<AuthState> => {
-  if (useMocks()) {
+  if (isMockMode()) {
     return {
       isAuthenticated: true,
       user: mockUser,
@@ -70,7 +70,7 @@ export const getAuthenticatedUser = async () => {
 };
 
 export const logOut = createServerFn().handler(async () => {
-  if (useMocks()) {
+  if (isMockMode()) {
     return;
   }
 

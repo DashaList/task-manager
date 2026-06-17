@@ -1,21 +1,18 @@
 import { Todo } from '../types';
 import { getAuthenticatedUser } from './auth';
-import { addMockTask, deleteMockTask, editMockTask, getMockTasks, useMocks } from './mockData';
+import { addMockTask, deleteMockTask, editMockTask, getMockTasks, isMockMode } from './mockData';
 import { eq } from 'drizzle-orm';
 import { createServerFn } from '@tanstack/react-start';
 import { db } from '@/server/drizzle';
 import { tasksTable } from '@/server/drizzle/schema';
 
 export const fetchTasks = createServerFn().handler(async () => {
-  if (useMocks()) {
+  if (isMockMode()) {
     return getMockTasks();
   }
 
   const user = await getAuthenticatedUser();
-  const tasks = await db
-    .select()
-    .from(tasksTable)
-    .where(eq(tasksTable.ownerId, user.id));
+  const tasks = await db.select().from(tasksTable).where(eq(tasksTable.ownerId, user.id));
 
   return tasks.map(({ description, ...task }) => ({
     ...task,
@@ -26,7 +23,7 @@ export const fetchTasks = createServerFn().handler(async () => {
 export const addTask = createServerFn({ method: 'POST' })
   .validator((data: Pick<Todo, 'text' | 'description' | 'projectId'>) => data)
   .handler(async ({ data: { text, projectId, description } }) => {
-    if (useMocks()) {
+    if (isMockMode()) {
       addMockTask(text, projectId, description);
       return;
     }
@@ -38,7 +35,7 @@ export const addTask = createServerFn({ method: 'POST' })
 export const deleteTask = createServerFn({ method: 'POST' })
   .validator((data: string) => data)
   .handler(async ({ data: id }) => {
-    if (useMocks()) {
+    if (isMockMode()) {
       deleteMockTask(id);
       return;
     }
@@ -50,7 +47,7 @@ export const deleteTask = createServerFn({ method: 'POST' })
 export const editTask = createServerFn({ method: 'POST' })
   .validator((data: Partial<Todo> & Pick<Todo, 'id'>) => data)
   .handler(async ({ data: { id, ...newTask } }) => {
-    if (useMocks()) {
+    if (isMockMode()) {
       editMockTask(id, newTask);
       return;
     }

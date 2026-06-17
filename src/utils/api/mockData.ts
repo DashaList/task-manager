@@ -1,6 +1,6 @@
 import { Todo } from '@/utils/types';
 
-export const useMocks = () => import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true';
+export const isMockMode = () => import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true';
 
 export const mockUser = {
   id: '00000000-0000-4000-8000-000000000001',
