@@ -2,7 +2,8 @@ import { FC, FormEvent, useState } from 'react';
 import { ProjectSelect } from '../ProjectSelect';
 import { Button } from '../ui';
 import { TodoInputControls } from './TodoInputControls';
-import { getRouteApi } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { profileQueryOptions } from '@/utils/queries/profile';
 import { useAddTaskMutation } from '@/utils/queries/tasks';
 import { Todo } from '@/utils/types';
 
@@ -11,13 +12,12 @@ interface TodoInputProps {
 }
 
 export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
-  const routeApi = getRouteApi('/');
-  const { defaultProjectId } = routeApi.useLoaderData().profile;
+  const { data: profile } = useSuspenseQuery(profileQueryOptions());
 
   const initialTodo: Pick<Todo, 'text' | 'description' | 'projectId'> = {
     text: '',
     description: '',
-    projectId: defaultProjectId,
+    projectId: profile.defaultProjectId,
   };
 
   const { mutate: addTodo } = useAddTaskMutation();

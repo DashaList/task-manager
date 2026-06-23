@@ -1,8 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { getProfile } from '@/utils/api/profile';
-import { getUserProjects } from '@/utils/api/projects';
-import { fetchTasks } from '@/utils/api/tasks';
+import { profileQueryOptions } from '@/utils/queries/profile';
+import { projectsQueryOptions } from '@/utils/queries/projects';
 import { tasksQueryOptions } from '@/utils/queries/tasks';
 import { AddTodoControl } from '@components/AddTodoControl';
 import { Header } from '@components/Header';
@@ -16,11 +15,9 @@ export const Route = createFileRoute('/')({
     }
   },
   loader: async ({ context }) => {
+    context.queryClient.ensureQueryData(profileQueryOptions());
+    context.queryClient.ensureQueryData(projectsQueryOptions());
     await context.queryClient.ensureQueryData(tasksQueryOptions());
-    const profile = await getProfile();
-    const projects = await getUserProjects();
-
-    return { profile, projects };
   },
 });
 

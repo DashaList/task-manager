@@ -1,12 +1,7 @@
 import type { FC } from 'react';
-import { getRouteApi } from '@tanstack/react-router';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { projectsQueryOptions } from '@/utils/queries/projects';
 
 interface ProjectSelectProps {
   projectId: string;
@@ -14,8 +9,7 @@ interface ProjectSelectProps {
 }
 
 export const ProjectSelect: FC<ProjectSelectProps> = ({ projectId, onChange }) => {
-  const routeApi = getRouteApi('/');
-  const projects = routeApi.useLoaderData().projects;
+  const { data: projects } = useSuspenseQuery(projectsQueryOptions());
 
   return (
     <Select value={projectId} onValueChange={onChange}>

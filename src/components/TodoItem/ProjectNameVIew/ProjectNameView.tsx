@@ -1,14 +1,15 @@
 import type { FC } from 'react';
 import { Hash, Inbox } from 'lucide-react';
-import { getRouteApi } from '@tanstack/react-router';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { projectsQueryOptions } from '@/utils/queries/projects';
 
 interface ProjectNameViewProps {
   projectId: string;
 }
 
 export const ProjectNameView: FC<ProjectNameViewProps> = ({ projectId }) => {
-  const routeApi = getRouteApi('/');
-  const projects = routeApi.useLoaderData().projects;
+  const { data: projects } = useSuspenseQuery(projectsQueryOptions());
+
   const projectName = projects.find((project) => project.id === projectId)?.name ?? 'Inbox';
   const isInbox = projectName === 'Inbox';
   const ProjectIcon = isInbox ? Inbox : Hash;
