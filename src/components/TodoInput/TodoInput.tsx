@@ -4,6 +4,7 @@ import { Button } from '../ui';
 import { TodoInputControls } from './TodoInputControls';
 import { getRouteApi } from '@tanstack/react-router';
 import { useAddTaskMutation } from '@/utils/queries/tasks';
+import { Todo } from '@/utils/types';
 
 interface TodoInputProps {
   onClose: () => void;
@@ -13,17 +14,22 @@ export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
   const routeApi = getRouteApi('/');
   const { defaultProjectId } = routeApi.useLoaderData().profile;
 
+  const initialTodo: Pick<Todo, 'text' | 'description' | 'projectId'> = {
+    text: '',
+    description: '',
+    projectId: defaultProjectId,
+  };
+
   const { mutate: addTodo } = useAddTaskMutation();
 
-  const [text, setText] = useState('');
-  const [description, setDescription] = useState('');
-  const [projectId, setProjectId] = useState(defaultProjectId);
+  const [todo, setTodo] = useState(initialTodo);
+  const { text, description, projectId } = todo;
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      addTodo({ text: text.trim(), projectId, description: description.trim() || undefined });
-      onClose();
+      addTodo({ text: text.trim(), projectId, description: description?.trim() || undefined });
+      setTodo(initialTodo);
     }
   };
 
@@ -34,7 +40,7 @@ export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
           <input
             type="text"
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => setTodo((prev) => ({ ...prev, text: e.target.value }))}
             placeholder="Task name"
             autoFocus
             className="w-full border-0 bg-transparent p-0 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-0"
@@ -42,7 +48,7 @@ export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
           <input
             type="text"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setTodo((prev) => ({ ...prev, description: e.target.value }))}
             placeholder="Description"
             className="w-full border-0 bg-transparent p-0 text-sm text-gray-600 placeholder:text-gray-400 focus:outline-none focus:ring-0"
           />
@@ -51,7 +57,10 @@ export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
         <TodoInputControls />
 
         <div className="mt-4 flex items-center justify-between border-t pt-3">
-          <ProjectSelect projectId={projectId} onChange={setProjectId} />
+          <ProjectSelect
+            projectId={projectId}
+            onChange={(projectId) => setTodo((prev) => ({ ...prev, projectId }))}
+          />
 
           <div className="flex items-center gap-2">
             <Button
