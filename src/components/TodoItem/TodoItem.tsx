@@ -1,21 +1,25 @@
 import { FC } from 'react';
 import { ProjectNameView } from './ProjectNameVIew';
 import { Trash2 } from 'lucide-react';
+import { useDeleteTaskMutation, useEditTaskMutation } from '@/utils/queries/tasks';
 import { Todo } from '@/utils/types';
 import { Button, Checkbox } from '@ui';
 
 interface TodoItemProps {
   todo: Todo;
-  onEdit: (newTask: Partial<Todo>) => void;
-  onDelete: () => void;
 }
 
-export const TodoItem: FC<TodoItemProps> = ({ todo, onEdit, onDelete }) => {
+export const TodoItem: FC<TodoItemProps> = ({ todo }) => {
+  const { mutate: deleteTask } = useDeleteTaskMutation();
+  const { mutate: editTask } = useEditTaskMutation();
+
   return (
     <li className="group flex min-h-20 items-start gap-3 rounded px-2 py-3 hover:bg-muted/50">
       <Checkbox
         checked={todo.completed}
-        onCheckedChange={() => onEdit({ completed: !todo.completed })}
+        onCheckedChange={() =>
+          editTask({ taskId: todo.id, newTask: { completed: !todo.completed } })
+        }
         id={`todo-${todo.id}`}
         className="mt-1 rounded-full"
       />
@@ -38,7 +42,7 @@ export const TodoItem: FC<TodoItemProps> = ({ todo, onEdit, onDelete }) => {
             variant="ghost"
             size="icon"
             className="h-8 w-8 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-            onClick={onDelete}
+            onClick={() => deleteTask(todo.id)}
           >
             <Trash2 className="h-4 w-4" />
             <span className="sr-only">Delete</span>

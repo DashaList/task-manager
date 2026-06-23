@@ -1,14 +1,9 @@
-import { createFileRoute, redirect, useRouter } from '@tanstack/react-router';
-import { useServerFn } from '@tanstack/react-start';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { getProfile } from '@/utils/api/profile';
 import { getUserProjects } from '@/utils/api/projects';
-import {
-  addTask as addTaskServerFn,
-  deleteTask as deleteTaskServerfn,
-  editTask as editTaskServerFn,
-  fetchTasks,
-} from '@/utils/api/tasks';
-import { Todo } from '@/utils/types';
+import { fetchTasks } from '@/utils/api/tasks';
+import { tasksQueryOptions } from '@/utils/queries/tasks';
 import { AddTodoControl } from '@components/AddTodoControl';
 import { Header } from '@components/Header';
 import { TodoList } from '@components/TodoList';
@@ -20,37 +15,17 @@ export const Route = createFileRoute('/')({
       throw redirect({ to: '/signin' });
     }
   },
-  loader: async () => {
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(tasksQueryOptions());
     const profile = await getProfile();
-    const tasks = await fetchTasks();
     const projects = await getUserProjects();
 
-    return { profile, tasks, projects };
+    return { profile, projects };
   },
 });
 
 function TodoListPage() {
-  const router = useRouter();
-  const tasks = Route.useLoaderData().tasks;
-
-  const addTask = useServerFn(addTaskServerFn);
-  const deleteTask = useServerFn(deleteTaskServerfn);
-  const editTask = useServerFn(editTaskServerFn);
-
-  const handleAddTask = async (text: string, projectId: string, description?: string) => {
-    await addTask({ data: { text, projectId, description } });
-    router.invalidate();
-  };
-
-  const handleDeleteTask = async (id: string) => {
-    await deleteTask({ data: id });
-    router.invalidate();
-  };
-
-  const handleEditTask = (id: string) => async (newTask: Partial<Todo>) => {
-    await editTask({ data: { id, ...newTask } });
-    router.invalidate();
-  };
+  const { data: tasks } = useSuspenseQuery(tasksQueryOptions());
 
   // TODO: make layout with header
 
@@ -58,17 +33,9 @@ function TodoListPage() {
     <div className="max-w-2xl mx-auto p-8 pt-16">
       <Header />
       <h1 className="text-[32px] font-bold text-gray-900 mb-8">Frog Task Manager</h1>
-      <TodoList
-        todos={tasks.filter((todo) => !todo.completed)}
-        onEditItem={handleEditTask}
-        onDeleteItem={handleDeleteTask}
-      />
-      <AddTodoControl onAddTodo={handleAddTask} />
-      <TodoList
-        todos={tasks.filter((todo) => todo.completed)}
-        onEditItem={handleEditTask}
-        onDeleteItem={handleDeleteTask}
-      />
+      <TodoList todos={tasks.filter((todo) => !todo.completed)} />
+      <AddTodoControl />
+      <TodoList todos={tasks.filter((todo) => todo.completed)} />
     </div>
   );
 }

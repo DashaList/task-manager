@@ -1,10 +1,11 @@
 /// <reference types="vite/client" />
 import type { ReactNode } from 'react';
+import { Outlet, createRootRouteWithContext, HeadContent, Scripts } from '@tanstack/react-router';
 import globalscss from '@/styles/globals.css?url';
 import { getUser } from '@/utils/api/auth';
-import { Outlet, createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import { RouterContext } from '@/utils/types';
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {

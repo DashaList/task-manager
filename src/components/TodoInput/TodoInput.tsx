@@ -3,15 +3,17 @@ import { ProjectSelect } from '../ProjectSelect';
 import { Button } from '../ui';
 import { TodoInputControls } from './TodoInputControls';
 import { getRouteApi } from '@tanstack/react-router';
+import { useAddTaskMutation } from '@/utils/queries/tasks';
 
 interface TodoInputProps {
-  onAddTodo: (text: string, projectId: string, description?: string) => void;
   onClose: () => void;
 }
 
-export const TodoInput: FC<TodoInputProps> = ({ onAddTodo, onClose }) => {
+export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
   const routeApi = getRouteApi('/');
   const { defaultProjectId } = routeApi.useLoaderData().profile;
+
+  const { mutate: addTodo } = useAddTaskMutation();
 
   const [text, setText] = useState('');
   const [description, setDescription] = useState('');
@@ -20,7 +22,7 @@ export const TodoInput: FC<TodoInputProps> = ({ onAddTodo, onClose }) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      onAddTodo(text.trim(), projectId, description.trim() || undefined);
+      addTodo({ text: text.trim(), projectId, description: description.trim() || undefined });
       onClose();
     }
   };

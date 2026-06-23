@@ -4,22 +4,15 @@ import { Todo } from '@/utils/types';
 
 interface TodoListProps {
   todos: Todo[];
-  onEditItem: (id: string) => (newTask: Partial<Todo>) => void;
-  onDeleteItem: (id: string) => void;
 }
 
-export const TodoList: FC<TodoListProps> = ({ todos, onEditItem, onDeleteItem }) => {
+export const TodoList: FC<TodoListProps> = ({ todos }) => {
   if (todos.length === 0) return null;
 
   return (
     <ul className="space-y-1 border-b border-gray-200">
       {todos.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onEdit={onEditItem(todo.id)}
-          onDelete={() => onDeleteItem(todo.id)}
-        />
+        <TodoItem key={todo.id} todo={todo} />
       ))}
     </ul>
   );
