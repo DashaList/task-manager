@@ -1,13 +1,16 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { AddTodoButton } from '../AddTodoButton';
-import { TodoInput } from '../TodoInput';
+import { AddTodoInput } from '../AddTodoInput';
 
-export const AddTodoControl: FC = () => {
-  const [isEditing, setIsEditing] = useState(false);
+interface AddTodoControlProps {
+  editingTaskId: string | undefined;
+  setEditingTaskId: Dispatch<SetStateAction<string | undefined>>;
+}
 
-  if (!isEditing) {
-    return <AddTodoButton onClick={() => setIsEditing(true)} />;
+export const AddTodoControl: FC<AddTodoControlProps> = ({ editingTaskId, setEditingTaskId }) => {
+  if (editingTaskId === 'new-task') {
+    return <AddTodoInput onClose={() => setEditingTaskId(undefined)} />;
   }
 
-  return <TodoInput onClose={() => setIsEditing(false)} />;
+  return <AddTodoButton onClick={() => setEditingTaskId('new-task')} />;
 };

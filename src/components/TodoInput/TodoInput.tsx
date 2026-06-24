@@ -1,36 +1,31 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, SubmitEvent, useState } from 'react';
 import { ProjectSelect } from '../ProjectSelect';
 import { Button } from '../ui';
 import { TodoInputControls } from './TodoInputControls';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { profileQueryOptions } from '@/utils/queries/profile';
-import { useAddTaskMutation } from '@/utils/queries/tasks';
 import { Todo } from '@/utils/types';
 
 interface TodoInputProps {
+  initialTodo: Pick<Todo, 'text' | 'description' | 'projectId'>;
+  submitButtonText: string;
+  onSubmit: (
+    newTodo: Pick<Todo, 'text' | 'description' | 'projectId'>,
+    e: SubmitEvent<HTMLFormElement>,
+  ) => void;
   onClose: () => void;
 }
 
-export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
-  const { data: profile } = useSuspenseQuery(profileQueryOptions());
-
-  const initialTodo: Pick<Todo, 'text' | 'description' | 'projectId'> = {
-    text: '',
-    description: '',
-    projectId: profile.defaultProjectId,
-  };
-
-  const { mutate: addTodo } = useAddTaskMutation();
-
+export const TodoInput: FC<TodoInputProps> = ({
+  initialTodo,
+  submitButtonText,
+  onSubmit,
+  onClose,
+}) => {
   const [todo, setTodo] = useState(initialTodo);
   const { text, description, projectId } = todo;
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) {
-      addTodo({ text: text.trim(), projectId, description: description?.trim() || undefined });
-      setTodo(initialTodo);
-    }
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+    onSubmit(todo, e);
+    setTodo(initialTodo);
   };
 
   return (
@@ -78,7 +73,7 @@ export const TodoInput: FC<TodoInputProps> = ({ onClose }) => {
               className="h-7 bg-green-600 text-sm font-normal hover:bg-green-700"
               disabled={!text.trim()}
             >
-              Add task
+              {submitButtonText}
             </Button>
           </div>
         </div>

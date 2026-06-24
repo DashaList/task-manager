@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { profileQueryOptions } from '@/utils/queries/profile';
@@ -23,6 +24,7 @@ export const Route = createFileRoute('/')({
 
 function TodoListPage() {
   const { data: tasks } = useSuspenseQuery(tasksQueryOptions());
+  const [editingTaskId, setEditingTaskId] = useState<string>();
 
   // TODO: make layout with header
 
@@ -30,9 +32,17 @@ function TodoListPage() {
     <div className="max-w-2xl mx-auto p-8 pt-16">
       <Header />
       <h1 className="text-[32px] font-bold text-gray-900 mb-8">Frog Task Manager</h1>
-      <TodoList todos={tasks.filter((todo) => !todo.completed)} />
-      <AddTodoControl />
-      <TodoList todos={tasks.filter((todo) => todo.completed)} />
+      <TodoList
+        todos={tasks.filter((todo) => !todo.completed)}
+        editingTaskId={editingTaskId}
+        setEditingTaskId={setEditingTaskId}
+      />
+      <AddTodoControl editingTaskId={editingTaskId} setEditingTaskId={setEditingTaskId} />
+      <TodoList
+        todos={tasks.filter((todo) => todo.completed)}
+        editingTaskId={editingTaskId}
+        setEditingTaskId={setEditingTaskId}
+      />
     </div>
   );
 }

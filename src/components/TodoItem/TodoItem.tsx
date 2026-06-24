@@ -1,20 +1,21 @@
 import { FC } from 'react';
+import { TodoItemButtons } from '../TodoItemButtons';
 import { ProjectNameView } from './ProjectNameVIew';
-import { Trash2 } from 'lucide-react';
 import { useDeleteTaskMutation, useEditTaskMutation } from '@/utils/queries/tasks';
 import { Todo } from '@/utils/types';
-import { Button, Checkbox } from '@ui';
+import { Checkbox } from '@ui';
 
 interface TodoItemProps {
   todo: Todo;
+  onEdit: () => void;
 }
 
-export const TodoItem: FC<TodoItemProps> = ({ todo }) => {
+export const TodoItem: FC<TodoItemProps> = ({ todo, onEdit }) => {
   const { mutate: deleteTask } = useDeleteTaskMutation();
   const { mutate: editTask } = useEditTaskMutation();
 
   return (
-    <li className="group flex min-h-20 items-start gap-3 rounded px-2 py-3 hover:bg-muted/50">
+    <li className="group relative flex min-h-20 items-start gap-3 rounded px-2 py-3 hover:bg-muted/50">
       <Checkbox
         checked={todo.completed}
         onCheckedChange={() =>
@@ -23,9 +24,10 @@ export const TodoItem: FC<TodoItemProps> = ({ todo }) => {
         id={`todo-${todo.id}`}
         className="mt-1 rounded-full"
       />
+      <TodoItemButtons onEdit={onEdit} onDelete={() => deleteTask(todo.id)} />
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex min-w-0 items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 pr-36">
             <label
               htmlFor={`todo-${todo.id}`}
               className={`block cursor-pointer truncate text-base ${
@@ -38,15 +40,6 @@ export const TodoItem: FC<TodoItemProps> = ({ todo }) => {
               <p className="truncate text-sm text-gray-500">{todo.description}</p>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-            onClick={() => deleteTask(todo.id)}
-          >
-            <Trash2 className="h-4 w-4" />
-            <span className="sr-only">Delete</span>
-          </Button>
         </div>
         <div className="flex justify-end">
           <ProjectNameView projectId={todo.projectId} />
